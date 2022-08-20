@@ -1,7 +1,9 @@
 import axios from "axios";
 import Vue from 'vue'
+import router from '../router'
 
 import {Loading} from 'element-ui'
+import {Message} from 'element-ui'
 
 axios.defaults.baseURL = 'http://localhost:8080/'
 // axios.defaults.baseURL = 'https://www.mxnzp.com/api/verifycode/code/'
@@ -22,5 +24,6 @@ axios.defaults.baseURL = 'http://localhost:8080/'
 //    loadingInstance.close()
 //    return response
 // })
+
 
 Vue.prototype.$ajax = axios

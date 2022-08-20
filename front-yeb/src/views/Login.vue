@@ -32,9 +32,9 @@
       </div>
     </el-card>
     <!-- 登录表单 -->
-    <el-form ref="form" :model="loginForm" class="login-container">
+    <el-form :rules="rules" ref="loginForm" :model="loginForm" class="login-container">
       <h3 class="login-title">系统登录</h3>
-      <el-form-item>
+      <el-form-item prop="username">
         <el-input type="text" auto-complete="false" 
           v-model="loginForm.username" placeholder="请输入用户名" 
           prefix-icon="iconfont el-icon-user"
@@ -42,7 +42,7 @@
           @blur="recoverImages">
         </el-input>
       </el-form-item>
-      <el-form-item>
+      <el-form-item  prop="password"> 
         <el-input type="password" auto-complete="false" 
           v-model="loginForm.password" placeholder="请输入密码" 
           prefix-icon="iconfont el-icon-caret-right"
@@ -50,8 +50,8 @@
           @blur="recoverImages">
         </el-input>
       </el-form-item>
-      <el-form-item>
-        <el-input type="text" 
+      <el-form-item  prop="code">
+        <el-input type="text"
           auto-complete="false" 
           v-model="loginForm.code" 
           placeholder="点击图片切换验证码"
@@ -94,6 +94,12 @@ export default {
       code:{
         pic:'',
         realCode:'',
+      },
+      // 输入框校验规则
+      rules:{
+        username:[{required:true,message:'请输入用户名',trigger:'blur'}],
+        password:[{required:true,message:'请输入密码',trigger:'blur'}],
+        code:[{required:true,message:'请输入验证码',trigger:'blur'}],
       },
       // 表情图
       loginSrc:require("@/assets/login1.jpg"),
@@ -165,7 +171,7 @@ export default {
     async getCode(){
       // https://www.mxnzp.com/api/verifycode/code
       // ?len=5&type=0&app_id=1hdz9pgxivhkldbj&app_secret=Y0Mrd0l0azRBdVlrZlI3eVhWRUtkQT09
-      const {data:res} = await this.$ajax.get('api/verifycode/code',
+      const {data:res} = await this.$ajax.get('/api/verifycode/code',
         {
           params:{
             len:4,
@@ -185,7 +191,7 @@ export default {
     async getWeather(){
       // https://www.mxnzp.com/api/weather/current/南京市
       // ?app_id=1hdz9pgxivhkldbj&app_secret=Y0Mrd0l0azRBdVlrZlI3eVhWRUtkQT09
-      const {data:res} = await this.$ajax.get('api/weather/current/'+ this.addressAndIp.city,
+      const {data:res} = await this.$ajax.get('/api/weather/current/'+ this.addressAndIp.city,
         {
           params:{
             app_id:'1hdz9pgxivhkldbj',
@@ -207,7 +213,7 @@ export default {
     // ?app_id=1hdz9pgxivhkldbj&app_secret=Y0Mrd0l0azRBdVlrZlI3eVhWRUtkQT09
     async getIp(){
       if(this.addressAndIp.city !== '南京市'){
-        const {data:res} = await this.$ajax.get('api/ip/self',
+        const {data:res} = await this.$ajax.get('/api/ip/self',
           {
             params:{
               app_id:'1hdz9pgxivhkldbj',
@@ -221,7 +227,6 @@ export default {
         this.addressAndIp.ip = res.data.ip
       }
     },  
-
     // 点击了登录按钮
     submitLogin(){
       // 判断用户名和密码是否正确
